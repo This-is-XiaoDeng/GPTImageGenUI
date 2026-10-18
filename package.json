@@ -1,0 +1,19 @@
+{
+  "name": "gpt-image-gen-ui",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "GPT 绘图工作台 · 纯前端版（Vue 3 + Vite，数据存于浏览器本地）",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^6.0.7"
+  }
+}
