@@ -1,7 +1,26 @@
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, nextTick } from "vue";
 import { state, db, toast, normalizeTags } from "../store.js";
 import { putImage, deleteImage, ensureImageUrl } from "../lib/imageDb.js";
+import { fixModalGeometry, trackModalGeometry } from "../lib/modalFix.js";
+
+const modalRef = ref(null);
+let releaseTrack = null;
+
+watch(
+  () => Boolean(state.promptDialog),
+  async (open) => {
+    if (open) {
+      await nextTick();
+      await fixModalGeometry(modalRef.value);
+      releaseTrack?.();
+      releaseTrack = trackModalGeometry(modalRef.value);
+    } else {
+      releaseTrack?.();
+      releaseTrack = null;
+    }
+  },
+);
 
 const visible = computed(() => Boolean(state.promptDialog));
 const isEdit = computed(() => state.promptDialog?.mode === "edit");
@@ -119,7 +138,7 @@ async function save() {
 
 <template>
   <Teleport to="body">
-    <div v-if="visible" class="modal" @click.self="close">
+    <div ref="modalRef" v-if="visible" class="modal" @click.self="close">
       <form class="modal-card" @submit.prevent="save">
         <div class="panel-head">
           <h2>{{ isEdit ? "编辑提示词" : "添加提示词" }}</h2>

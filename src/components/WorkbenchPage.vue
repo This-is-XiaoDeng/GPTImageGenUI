@@ -1,11 +1,15 @@
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, nextTick } from "vue";
 import { config, state, toast, switchPage, SIZE_OPTIONS, CHOICES } from "../store.js";
 import { buildImageOptions, buildSizeValue, submitTask } from "../lib/tasks.js";
 import { pickEndpoint } from "../lib/upstream.js";
 import { ensureImageUrl } from "../lib/imageDb.js";
+import { fixModalGeometry, trackModalGeometry } from "../lib/modalFix.js";
 import TaskCard from "./TaskCard.vue";
 import MaskPainter from "./MaskPainter.vue";
+
+const maskModalRef = ref(null);
+let releaseMaskTrack = null;
 
 const prompt = ref("");
 const mode = ref("text");
@@ -29,6 +33,18 @@ const paintedMaskBlob = ref(null);
 const maskFile = ref(null);
 const maskSourceKey = ref("");
 const maskPainterOpen = ref(false);
+
+watch(maskPainterOpen, async (open) => {
+  if (open) {
+    await nextTick();
+    await fixModalGeometry(maskModalRef.value);
+    releaseMaskTrack?.();
+    releaseMaskTrack = trackModalGeometry(maskModalRef.value);
+  } else {
+    releaseMaskTrack?.();
+    releaseMaskTrack = null;
+  }
+});
 
 const isCustom = computed(() => size.value === "custom");
 const endpointOptions = computed(() =>
@@ -389,7 +405,7 @@ function openResultLightbox() {
     </section>
 
     <Teleport to="body">
-      <div v-if="maskPainterOpen" class="modal" @click.self="maskPainterOpen = false">
+      <div v-if="maskPainterOpen" ref="maskModalRef" class="modal" @click.self="maskPainterOpen = false">
         <MaskPainter :source-url="editImageUrl" :source-key="editImageUrl" @close="maskPainterOpen = false" @saved="onPaintedMaskSaved" />
       </div>
     </Teleport>

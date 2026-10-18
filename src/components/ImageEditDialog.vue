@@ -1,7 +1,26 @@
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, nextTick } from "vue";
 import { state, db, toast, normalizeTags, confirmAction } from "../store.js";
 import { deleteImage } from "../lib/imageDb.js";
+import { fixModalGeometry, trackModalGeometry } from "../lib/modalFix.js";
+
+const modalRef = ref(null);
+let releaseTrack = null;
+
+watch(
+  () => Boolean(state.imageEditDialog),
+  async (open) => {
+    if (open) {
+      await nextTick();
+      await fixModalGeometry(modalRef.value);
+      releaseTrack?.();
+      releaseTrack = trackModalGeometry(modalRef.value);
+    } else {
+      releaseTrack?.();
+      releaseTrack = null;
+    }
+  },
+);
 
 const visible = computed(() => Boolean(state.imageEditDialog));
 
@@ -56,7 +75,7 @@ async function remove() {
 
 <template>
   <Teleport to="body">
-    <div v-if="visible" class="modal" @click.self="close">
+    <div ref="modalRef" v-if="visible" class="modal" @click.self="close">
       <form class="modal-card" @submit.prevent="save">
         <div class="panel-head">
           <h2>编辑图片信息</h2>

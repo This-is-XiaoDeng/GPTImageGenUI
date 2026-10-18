@@ -1,8 +1,27 @@
 <script setup>
-import { computed } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { state, switchPage, toast } from "../store.js";
 import { getBlobById, downloadBlob } from "../lib/imageDb.js";
 import { safeDownloadName, mimeToExt } from "../lib/util.js";
+import { fixModalGeometry, trackModalGeometry } from "../lib/modalFix.js";
+
+const modalRef = ref(null);
+let releaseTrack = null;
+
+watch(
+  () => Boolean(state.lightbox),
+  async (open) => {
+    if (open) {
+      await nextTick();
+      await fixModalGeometry(modalRef.value);
+      releaseTrack?.();
+      releaseTrack = trackModalGeometry(modalRef.value);
+    } else {
+      releaseTrack?.();
+      releaseTrack = null;
+    }
+  },
+);
 
 const lightbox = computed(() => state.lightbox);
 
@@ -57,7 +76,7 @@ async function editAsSource() {
 
 <template>
   <Teleport to="body">
-    <div v-if="lightbox" class="modal" @click.self="state.lightbox = null">
+    <div ref="modalRef" v-if="lightbox" class="modal" @click.self="state.lightbox = null">
       <div class="lightbox-card">
         <button class="lightbox-close" type="button" @click="state.lightbox = null">关闭</button>
         <img :src="lightbox.url" :alt="lightbox.title" @click="openOriginal" />
