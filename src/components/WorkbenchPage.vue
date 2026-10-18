@@ -205,7 +205,7 @@ function openResultLightbox() {
 </script>
 
 <template>
-  <section class="page active">
+  <section class="page">
     <div class="page-head">
       <div>
         <p class="eyebrow">Workbench</p>
@@ -388,8 +388,10 @@ function openResultLightbox() {
       </div>
     </section>
 
-    <div v-if="maskPainterOpen" class="modal" @click.self="maskPainterOpen = false">
-      <MaskPainter :source-url="editImageUrl" :source-key="editImageUrl" @close="maskPainterOpen = false" @saved="onPaintedMaskSaved" />
-    </div>
+    <Teleport to="body">
+      <div v-if="maskPainterOpen" class="modal" @click.self="maskPainterOpen = false">
+        <MaskPainter :source-url="editImageUrl" :source-key="editImageUrl" @close="maskPainterOpen = false" @saved="onPaintedMaskSaved" />
+      </div>
+    </Teleport>
   </section>
 </template>

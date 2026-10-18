@@ -42,9 +42,12 @@ function applyAppearance() {
   root.dataset.theme = config.color_theme;
 }
 
+const DEFAULT_FAVICON = "./favicon.svg";
+
 function applyWebIcon() {
   const favicon = document.getElementById("faviconLink");
-  if (favicon) favicon.href = config.web_icon_url || "";
+  if (!favicon) return;
+  favicon.setAttribute("href", config.web_icon_url || DEFAULT_FAVICON);
 }
 
 watch(() => [config.web_background_url, config.web_background_opacity, config.color_theme], applyAppearance);
@@ -89,11 +92,11 @@ onMounted(() => {
     </aside>
 
     <main class="main">
-      <WorkbenchPage v-show="state.page === 'workbench'" />
-      <TasksPage v-show="state.page === 'tasks'" />
-      <GalleryPage v-show="state.page === 'gallery'" />
-      <PromptsPage v-show="state.page === 'prompts'" />
-      <SettingsPage v-show="state.page === 'settings'" />
+      <WorkbenchPage :class="{ active: state.page === 'workbench' }" />
+      <TasksPage :class="{ active: state.page === 'tasks' }" />
+      <GalleryPage :class="{ active: state.page === 'gallery' }" />
+      <PromptsPage :class="{ active: state.page === 'prompts' }" />
+      <SettingsPage :class="{ active: state.page === 'settings' }" />
     </main>
   </div>
 

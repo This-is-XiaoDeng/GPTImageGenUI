@@ -56,23 +56,25 @@ async function editAsSource() {
 </script>
 
 <template>
-  <div v-if="lightbox" class="modal" @click.self="state.lightbox = null">
-    <div class="lightbox-card">
-      <button class="lightbox-close" type="button" @click="state.lightbox = null">关闭</button>
-      <img :src="lightbox.url" :alt="lightbox.title" @click="openOriginal" />
-      <h2>{{ lightbox.title }}</h2>
-      <button
-        v-if="lightbox.showEdit"
-        class="icon-btn lightbox-edit"
-        type="button"
-        title="作为图生图原图编辑"
-        @click="editAsSource"
-      >
-        <i class="fa-solid fa-pen-to-square"></i>
-      </button>
-      <button class="icon-btn lightbox-download" type="button" title="下载当前图片" @click="download">
-        <i class="fa-solid fa-download"></i>
-      </button>
+  <Teleport to="body">
+    <div v-if="lightbox" class="modal" @click.self="state.lightbox = null">
+      <div class="lightbox-card">
+        <button class="lightbox-close" type="button" @click="state.lightbox = null">关闭</button>
+        <img :src="lightbox.url" :alt="lightbox.title" @click="openOriginal" />
+        <h2>{{ lightbox.title }}</h2>
+        <button
+          v-if="lightbox.showEdit"
+          class="icon-btn lightbox-edit"
+          type="button"
+          title="作为图生图原图编辑"
+          @click="editAsSource"
+        >
+          <i class="fa-solid fa-pen-to-square"></i>
+        </button>
+        <button class="icon-btn lightbox-download" type="button" title="下载当前图片" @click="download">
+          <i class="fa-solid fa-download"></i>
+        </button>
+      </div>
     </div>
-  </div>
+  </Teleport>
 </template>

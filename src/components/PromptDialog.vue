@@ -118,37 +118,39 @@ async function save() {
 </script>
 
 <template>
-  <div v-if="visible" class="modal" @click.self="close">
-    <form class="modal-card" @submit.prevent="save">
-      <div class="panel-head">
-        <h2>{{ isEdit ? "编辑提示词" : "添加提示词" }}</h2>
-        <button class="ghost" type="button" @click="close">关闭</button>
-      </div>
-      <label class="field">
-        <span>标题</span>
-        <input v-model="form.title" placeholder="例如：产品摄影 / 奇幻角色 / 建筑概念" />
-      </label>
-      <label class="field">
-        <span>提示词</span>
-        <textarea v-model="form.prompt" rows="7" placeholder="保存常用提示词，之后可一键填充到工作台。"></textarea>
-      </label>
-      <label class="field">
-        <span>标签</span>
-        <input v-model="form.tags" placeholder="逗号或空格分隔" />
-      </label>
-      <label class="field">
-        <span>参考图（仅展示）</span>
-        <input type="file" accept="image/png,image/jpeg,image/webp" @change="onReferenceChange" />
-      </label>
-      <div class="reference-preview" :class="{ empty: !referenceUrl }">
-        <img v-if="referenceUrl" :src="referenceUrl" alt="参考图" />
-        <p v-else class="muted">未添加参考图。</p>
-      </div>
-      <label v-if="isEdit" class="check-row">
-        <input type="checkbox" :checked="clearReference" @change="toggleClearReference" />
-        <span>移除当前参考图</span>
-      </label>
-      <button class="primary" type="submit">{{ isEdit ? "保存修改" : "保存提示词" }}</button>
-    </form>
-  </div>
+  <Teleport to="body">
+    <div v-if="visible" class="modal" @click.self="close">
+      <form class="modal-card" @submit.prevent="save">
+        <div class="panel-head">
+          <h2>{{ isEdit ? "编辑提示词" : "添加提示词" }}</h2>
+          <button class="ghost" type="button" @click="close">关闭</button>
+        </div>
+        <label class="field">
+          <span>标题</span>
+          <input v-model="form.title" placeholder="例如：产品摄影 / 奇幻角色 / 建筑概念" />
+        </label>
+        <label class="field">
+          <span>提示词</span>
+          <textarea v-model="form.prompt" rows="7" placeholder="保存常用提示词，之后可一键填充到工作台。"></textarea>
+        </label>
+        <label class="field">
+          <span>标签</span>
+          <input v-model="form.tags" placeholder="逗号或空格分隔" />
+        </label>
+        <label class="field">
+          <span>参考图（仅展示）</span>
+          <input type="file" accept="image/png,image/jpeg,image/webp" @change="onReferenceChange" />
+        </label>
+        <div class="reference-preview" :class="{ empty: !referenceUrl }">
+          <img v-if="referenceUrl" :src="referenceUrl" alt="参考图" />
+          <p v-else class="muted">未添加参考图。</p>
+        </div>
+        <label v-if="isEdit" class="check-row">
+          <input type="checkbox" :checked="clearReference" @change="toggleClearReference" />
+          <span>移除当前参考图</span>
+        </label>
+        <button class="primary" type="submit">{{ isEdit ? "保存修改" : "保存提示词" }}</button>
+      </form>
+    </div>
+  </Teleport>
 </template>
