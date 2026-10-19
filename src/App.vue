@@ -10,7 +10,6 @@ import PromptDialog from "./components/PromptDialog.vue";
 import ImageEditDialog from "./components/ImageEditDialog.vue";
 import ConfirmDialog from "./components/ConfirmDialog.vue";
 import Lightbox from "./components/Lightbox.vue";
-import MaskPainter from "./components/MaskPainter.vue";
 
 const NAV_ITEMS = [
   { page: "workbench", icon: "fa-solid fa-wand-magic-sparkles", label: "工作台" },
@@ -104,6 +103,5 @@ onMounted(() => {
   <ImageEditDialog />
   <ConfirmDialog />
   <Lightbox />
-  <MaskPainter />
   <div class="toast" :class="{ hidden: !state.toastMessage }">{{ state.toastMessage }}</div>
 </template>
